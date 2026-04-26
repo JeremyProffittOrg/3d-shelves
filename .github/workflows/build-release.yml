@@ -1,4 +1,4 @@
-name: Build and Release Bar Shelves
+name: Build and Release 77-inch Industrial Shelves
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
           IMG_SIZE="800,600"
 
           # Wrapper files only — bar_shelf.scad is the shared library.
-          for scad_file in bar_shelf_*.scad; do
+          for scad_file in 77-inch-industrial-shelves-*.scad; do
             base_name="${scad_file%.scad}"
             echo "=== Building $base_name ==="
 
@@ -73,24 +73,31 @@ jobs:
           RELEASE_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
 
           cat > release_notes.md << EOF
-          # Bar Shelves — 3D Printable Parts
+          # 77-inch Industrial Shelves — 3D Printable Parts
 
           Generated on: $RELEASE_DATE
 
           ## Designs
 
-          One-off shelves designed to fit over a bar, available in four widths:
+          One-off shelves designed to fit over a 77-inch industrial bar.
 
-          - **bar_shelf_100mm** — 100 mm wide
-          - **bar_shelf_150mm** — 150 mm wide
-          - **bar_shelf_200mm** — 200 mm wide
-          - **bar_shelf_300mm** — 300 mm wide
+          **Standard depth (150 mm):**
+          - **77-inch-industrial-shelves-100mm** — 100 mm wide
+          - **77-inch-industrial-shelves-150mm** — 150 mm wide
+          - **77-inch-industrial-shelves-200mm** — 200 mm wide
+          - **77-inch-industrial-shelves-300mm** — 300 mm wide
+
+          **Deep (200 mm):**
+          - **77-inch-industrial-shelves-100mm-deep** — 100 mm wide × 200 mm deep
+          - **77-inch-industrial-shelves-150mm-deep** — 150 mm wide × 200 mm deep
+          - **77-inch-industrial-shelves-200mm-deep** — 200 mm wide × 200 mm deep
+          - **77-inch-industrial-shelves-300mm-deep** — 300 mm wide × 200 mm deep
 
           Each shelf has:
-          - 150 mm depth × 10 mm thick top surface
+          - 10 mm thick top surface
           - 50 mm × 5 mm rear back wall (rounded top)
           - 3 × 2 mm front retaining ledge
-          - Two drop walls underneath that straddle the bar
+          - Two drop walls underneath that straddle the bar (rear 5×50 mm, front 22×10 mm, 16 mm gap)
           - Three zip-tie channels under the shelf (10 mm from left, centered, 10 mm from right)
 
           ## Print Settings
@@ -106,7 +113,7 @@ jobs:
           EOF
 
           gh release create ${{ env.RELEASE_TAG }} \
-            --title "Bar Shelves — Latest Build" \
+            --title "77-inch Industrial Shelves — Latest Build" \
             --notes-file release_notes.md \
             --latest \
             output/stl/*.stl \
@@ -117,6 +124,6 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bar-shelves
+          name: 77-inch-industrial-shelves
           path: output/
           retention-days: 30

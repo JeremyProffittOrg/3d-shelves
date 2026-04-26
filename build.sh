@@ -14,7 +14,7 @@ CAMERA_FRONT="0,0,0,55,0,45,0"
 CAMERA_REAR="0,0,0,55,0,225,0"
 IMG_SIZE="800,600"
 
-for f in bar_shelf_*.scad; do
+for f in 77-inch-industrial-shelves-*.scad; do
     base="${f%.scad}"
     echo "=== Building $base ==="
     "$OPENSCAD" -o "$OUT_STL/$base.stl" "$f"

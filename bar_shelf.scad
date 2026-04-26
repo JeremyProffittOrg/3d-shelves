@@ -29,10 +29,11 @@ $fn = 64;
 // ===========================================
 
 // --- shelf body ---
-// shelf_width_mm can be overridden by a wrapper file by setting
-// `shelf_width_override = <mm>;` BEFORE doing `include<bar_shelf.scad>`.
+// shelf_width_mm and shelf_depth_mm can be overridden by a wrapper file by
+// setting `shelf_width_override` / `shelf_depth_override` BEFORE doing
+// `include<bar_shelf.scad>`.
 shelf_width_mm     = is_undef(shelf_width_override) ? 150 : shelf_width_override;
-shelf_depth_mm     = 150;
+shelf_depth_mm     = is_undef(shelf_depth_override) ? 150 : shelf_depth_override;
 shelf_thickness_mm = 10;
 shelf_bottom_round_mm = 2;   // Fillet on bottom-front and bottom-back edges
 
