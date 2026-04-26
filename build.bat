@@ -16,7 +16,7 @@ set CAMERA_FRONT=0,0,0,55,0,45,0
 set CAMERA_REAR=0,0,0,55,0,225,0
 set IMG_SIZE=800,600
 
-for %%f in (77-inch-industrial-shelves-*.scad) do (
+for %%f in (77-inch-industrial-shelves-*.scad 72-inch-cosco-shelves-*.scad) do (
     set BASE=%%~nf
     echo === Building !BASE! ===
     %OPENSCAD% -o %OUT_STL%\!BASE!.stl "%%f"

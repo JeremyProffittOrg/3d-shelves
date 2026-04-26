@@ -1,4 +1,4 @@
-name: Build and Release 77-inch Industrial Shelves
+name: Build and Release Shelves
 
 on:
   push:
@@ -38,8 +38,8 @@ jobs:
           CAMERA_REAR="0,0,0,55,0,225,0"
           IMG_SIZE="800,600"
 
-          # Wrapper files only — bar_shelf.scad is the shared library.
-          for scad_file in 77-inch-industrial-shelves-*.scad; do
+          # Wrapper files only — bar_shelf.scad and *-profile.scad are libraries.
+          for scad_file in 77-inch-industrial-shelves-*.scad 72-inch-cosco-shelves-*.scad; do
             base_name="${scad_file%.scad}"
             echo "=== Building $base_name ==="
 
@@ -73,25 +73,23 @@ jobs:
           RELEASE_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
 
           cat > release_notes.md << EOF
-          # 77-inch Industrial Shelves — 3D Printable Parts
+          # 3D Shelves — 3D Printable Parts
 
           Generated on: $RELEASE_DATE
 
           ## Designs
 
-          One-off shelves designed to fit over a 77-inch industrial bar.
+          Two profiles, each in 4 widths × 2 depths.
 
-          **Standard depth (150 mm):**
-          - **77-inch-industrial-shelves-100mm** — 100 mm wide
-          - **77-inch-industrial-shelves-150mm** — 150 mm wide
-          - **77-inch-industrial-shelves-200mm** — 200 mm wide
-          - **77-inch-industrial-shelves-300mm** — 300 mm wide
+          ### 77-inch industrial
 
-          **Deep (200 mm):**
-          - **77-inch-industrial-shelves-100mm-deep** — 100 mm wide × 200 mm deep
-          - **77-inch-industrial-shelves-150mm-deep** — 150 mm wide × 200 mm deep
-          - **77-inch-industrial-shelves-200mm-deep** — 200 mm wide × 200 mm deep
-          - **77-inch-industrial-shelves-300mm-deep** — 300 mm wide × 200 mm deep
+          **Standard depth (150 mm):** 77-inch-industrial-shelves-{100,150,200,300}mm
+          **Deep (200 mm):** 77-inch-industrial-shelves-{100,150,200,300}mm-deep
+
+          ### 72-inch Cosco
+
+          **Standard depth (150 mm):** 72-inch-cosco-shelves-{100,150,200,300}mm
+          **Deep (200 mm):** 72-inch-cosco-shelves-{100,150,200,300}mm-deep
 
           Each shelf has:
           - 10 mm thick top surface
@@ -113,7 +111,7 @@ jobs:
           EOF
 
           gh release create ${{ env.RELEASE_TAG }} \
-            --title "77-inch Industrial Shelves — Latest Build" \
+            --title "3D Shelves — Latest Build" \
             --notes-file release_notes.md \
             --latest \
             output/stl/*.stl \

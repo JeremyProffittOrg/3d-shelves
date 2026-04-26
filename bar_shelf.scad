@@ -50,16 +50,20 @@ front_ledge_round_mm  = 0.75;
 // --- drop wall A (rear drop wall, hangs below shelf) ---
 // "65mm from the back edge": back face of wall A is 65mm in from the shelf's back edge.
 drop_a_offset_from_back_mm = 65;
-drop_a_thickness_mm        = 5;   // Y dimension
-drop_a_drop_mm             = 50;  // Hangs 50mm below shelf bottom
-drop_a_round_mm            = 1;   // Edge fillet
+drop_a_thickness_mm = 5;   // Y dimension
+rear_wall_height_mm = is_undef(rear_wall_height_override) ? 50 : rear_wall_height_override;
+drop_a_round_mm     = 1;   // Edge fillet
 
-// --- drop wall B (front drop wall, hangs below shelf) ---
-// 16mm in front of wall A (gap between wall A's front face and wall B's back face)
-drop_b_gap_to_a_mm  = 16;
-drop_b_thickness_mm = 22;  // Y dimension
-drop_b_drop_mm      = 10;  // Hangs 10mm below shelf bottom
-drop_b_round_mm     = 1;
+// --- front border (the front lip / bar feature the shelf catches on) ---
+// border_ridge_mm  = front-to-back thickness of the bar where it sits between
+//                    the two drop walls (was: drop_b_gap_to_a_mm).
+// border_depth_mm  = Y-thickness of the front drop wall (was: drop_b_thickness_mm).
+// border_height_mm = how far the front drop wall hangs below the shelf
+//                    (was: drop_b_drop_mm).
+border_ridge_mm  = is_undef(border_ridge_override)  ? 16 : border_ridge_override;
+border_depth_mm  = is_undef(border_depth_override)  ? 22 : border_depth_override;
+border_height_mm = is_undef(border_height_override) ? 10 : border_height_override;
+drop_b_round_mm  = 1;
 
 // --- zip tie slots (three slots under the shelf) ---
 // Each slot is 8mm wide (X) by 3mm high (Z), running in Y from 10mm before
@@ -78,8 +82,8 @@ zip_tie_edge_inset_mm = 10;  // Distance from shelf X edge to outer slot edge
 // --- derived Y positions for drop walls (Y=0 = front, Y=shelf_depth_mm = back) ---
 drop_a_back_y  = shelf_depth_mm - drop_a_offset_from_back_mm;   // 85
 drop_a_front_y = drop_a_back_y  - drop_a_thickness_mm;          // 80
-drop_b_back_y  = drop_a_front_y - drop_b_gap_to_a_mm;           // 64
-drop_b_front_y = drop_b_back_y  - drop_b_thickness_mm;          // 42
+drop_b_back_y  = drop_a_front_y - border_ridge_mm;              // 64
+drop_b_front_y = drop_b_back_y  - border_depth_mm;              // 42
 
 // --- derived positions for the zip tie slots ---
 zip_tie_slot_y_front = drop_b_front_y - zip_tie_offset_mm;  // 32
@@ -235,21 +239,21 @@ module drop_wall(y_front, y_back, drop, r) {
 /**
  * drop_wall_a (rear drop wall)
  *
- * Position:   [0, drop_a_front_y, -drop_a_drop_mm]
+ * Position:   [0, drop_a_front_y, -rear_wall_height_mm]
  * Bounding:   [0, 80, -50] to [25.4, 85, 0]
  */
 module drop_wall_a() {
-    drop_wall(drop_a_front_y, drop_a_back_y, drop_a_drop_mm, drop_a_round_mm);
+    drop_wall(drop_a_front_y, drop_a_back_y, rear_wall_height_mm, drop_a_round_mm);
 }
 
 /**
  * drop_wall_b (front drop wall)
  *
- * Position:   [0, drop_b_front_y, -drop_b_drop_mm]
+ * Position:   [0, drop_b_front_y, -border_height_mm]
  * Bounding:   [0, 42, -10] to [25.4, 64, 0]
  */
 module drop_wall_b() {
-    drop_wall(drop_b_front_y, drop_b_back_y, drop_b_drop_mm, drop_b_round_mm);
+    drop_wall(drop_b_front_y, drop_b_back_y, border_height_mm, drop_b_round_mm);
 }
 
 // ===========================================
