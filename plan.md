@@ -34,7 +34,7 @@ Depends on: organizer-geometry
 ### organizer-delivery — Save and open the model
 Depends on: organizer-checks
 - [x] organizer-bambu — Launch installed Bambu Studio with the absolute STL path; inspect CLI import logs, no desktop controls.
-- [ ] organizer-commit — Commit only task changes using an isolated Git index; git push origin main succeeds; observe workflow terminal state when authenticated access permits.
+- [x] organizer-commit — Commit only task changes using an isolated Git index; git push origin main succeeds; observe workflow terminal state when authenticated access permits.
 
 ## Stop conditions (only these)
 Missing credentials block only remote delivery. Preserve unrelated changes. Do not print, schedule jobs, start EC2 instances, or use desktop control. Ambiguous dimensions are resolved by the stated assumption unless the user corrects it.
@@ -51,3 +51,12 @@ Run commands through Node child_process with windowsHide:true, no shell. Record 
 - node verify-organizer.mjs: PASS, 6,824 triangles, one connected watertight solid, 182 measurement rays, 101.6 mm pocket depths and 16 mm rail gap.
 - Bambu CLI export with absolute filename plus outputdir returned -13. Corrected to a relative export filename within outputdir; exit 0, result.json reports Success and a 3MF was created. No model geometry was changed for this correction.
 - Bambu Studio launched with generated 3MF, PID 22920. GUI content is not inspected because Bambu tasks are CLI-only.
+
+- Focused commit 0e0b0d88d852e7648172ad90cca84511a327916c pushed to origin/main successfully. Used isolated Git index, then synchronized only task paths in original index; unrelated staged rename and working files preserved.
+
+- Bambu-exported 3MF checked with Python zipfile/XML: 3D/Objects/object_1.model has 3,402 vertices and exact dimensions 300 x 200 x 226.134736 mm. No scaling occurred.
+- tasklist /FI "PID eq 22920" /FO CSV /NH confirmed the requested Bambu Studio process running.
+- GitHub Actions run 45231468319 for 0e0b0d88d852e7648172ad90cca84511a327916c reached completed/success. Public API access was sufficient for monitoring despite missing gh CLI authentication.
+- Release latest contains the organizer STL and front/rear PNGs, all nonempty. Evidence retained in build/organizer/release-run.json.
+- Final git diff --cached --name-status verified the unrelated staged bar_shelf.scad rename remains preserved.
+- Final state: requested model built, dimension/mesh checks passed, imported and opened through Bambu CLI, focused source changes pushed and release successful. No physical fit, load test, or slicing performed.
