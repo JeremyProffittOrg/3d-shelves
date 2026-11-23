@@ -228,3 +228,15 @@ Outputs land in `build/stl/` and `build/images/`.
 ## Conventions
 
 See [CLAUDE.md](CLAUDE.md) for project conventions (coordinate system, naming, modular design, documentation).
+
+## Angled pen and square-pocket organizer
+
+300 x 200 mm industrial rail shelf with 20 pen holes (4 across x 5 high) and six 2-inch square pockets. Openings face upward at 45 degrees; all pockets are 4 inches deep with closed ends.
+
+| Front view | Rear view |
+|---|---|
+| ![Front](https://github.com/JeremyProffittOrg/3d-shelves/releases/latest/download/77-inch-industrial-shelves-300mm-deep-organizer_front.png) | ![Rear](https://github.com/JeremyProffittOrg/3d-shelves/releases/latest/download/77-inch-industrial-shelves-300mm-deep-organizer_rear.png) |
+
+[Design details](77-inch-industrial-shelves-300mm-deep-organizer.md) · [OpenSCAD source](77-inch-industrial-shelves-300mm-deep-organizer.scad) · [STL](https://github.com/JeremyProffittOrg/3d-shelves/releases/latest/download/77-inch-industrial-shelves-300mm-deep-organizer.stl)
+
+Printer fit, supports and load capacity need review for this taller design; the bare-shelf print recommendations above do not apply automatically.
