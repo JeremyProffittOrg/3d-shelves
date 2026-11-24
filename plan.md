@@ -60,3 +60,19 @@ Run commands through Node child_process with windowsHide:true, no shell. Record 
 - Release latest contains the organizer STL and front/rear PNGs, all nonempty. Evidence retained in build/organizer/release-run.json.
 - Final git diff --cached --name-status verified the unrelated staged bar_shelf.scad rename remains preserved.
 - Final state: requested model built, dimension/mesh checks passed, imported and opened through Bambu CLI, focused source changes pushed and release successful. No physical fit, load test, or slicing performed.
+
+## printer-project-fit — Correct the Bambu project profile and placement
+2026-11-23 user request: "okay, but it won't fit and print on my bambulabs h2d or h3c, so resize it so it does".
+Outcome: a project within the installed H2D and H3C printable volumes. No printing or printer connection. The original 300 x 200 x 226.134736 mm mesh fits; the prior project used a blank printer model with 200 x 200 x 100 mm limits and off-plate placement. Preserve the original functional rail and pocket dimensions.
+Files: build-organizer-projects.py; verify-organizer.mjs; organizer design Markdown; plan.md.
+- [~] printer-project-build — Build with resolved installed H2D/H3C 0.4 mm machine, 0.20 mm process and Generic PLA presets, arrange within printable area.
+- [ ] printer-project-check — node verify-organizer.mjs <project.3mf> passes transformed build-volume, bed contact, machine name and individual-nozzle reach checks for both models. Bambu CLI slicing must succeed before claiming slice validation.
+- [ ] printer-project-open — Open corrected H2D project via CLI and retain H3C project for selection.
+- [ ] printer-project-save — Commit only task changes and push. No SCAD change is necessary.
+Job policy: each Bambu export/slice has a 10-minute timeout, logs and PID. Maximum two corrected retries per failure class. No print transmission.
+Execution: initial 3MF verification failed on out-of-volume placement; installed profiles show H2D nozzle reach 325 x 320 x 325 mm and H3C area 330 x 320 x 325 mm. Local profile facts, not a guessed printer specification.
+
+- H2D auto-arrange of the full-width mesh with supports left it off-plate and slicing failed -50. H3C slicing was running; stopped the owned slicer to rebuild the user-requested smaller version.
+- Revised scoped outcome: reduce shelf width to 280 mm (from 300) while preserving all pocket diameters, depths, clear gaps, height and rail dimensions. Recenter the pocket pattern using its existing formulas. This leaves 20 mm extra width in the H2D shared nozzle region. Update existing SCAD, mesh check, previews and design docs in addition to printer-project build files.
+
+- Resized mesh: node verify-organizer.mjs PASS, width 280 mm, depth 200 mm, height 226.134736 mm; 20 pen holes and six square pockets retain their requested sizes and 101.6 mm depths. Sources and output renamed to 77-inch-industrial-shelves-280mm-deep-organizer.

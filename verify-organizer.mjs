@@ -1,6 +1,47 @@
+import { spawnSync } from 'node:child_process';
+if (process.argv[2]?.endsWith('.3mf')) {
+ const result = spawnSync('python', ['-c', `import sys,zipfile,json,xml.etree.ElementTree as ET,posixpath
+z=zipfile.ZipFile(sys.argv[1]); cfg=json.loads(z.read('Metadata/project_settings.config'))
+ns={'m':'http://schemas.microsoft.com/3dmanufacturing/core/2015/02'}
+prod='{http://schemas.microsoft.com/3dmanufacturing/production/2015/06}'
+identity=[1,0,0,0,1,0,0,0,1,0,0,0]
+def transform(p,t):
+ return [sum(p[j]*t[j*3+i] for j in range(3))+t[9+i] for i in range(3)]
+def matrix(e): return list(map(float,e.get('transform','').split())) if e.get('transform') else identity
+def points(path,oid):
+ doc=ET.fromstring(z.read(path)); obj=doc.find('m:resources/m:object[@id="'+oid+'"]',ns)
+ assert obj is not None, 'missing object'
+ for v in obj.findall('m:mesh/m:vertices/m:vertex',ns): yield [float(v.get(k)) for k in ('x','y','z')]
+ for c in obj.findall('m:components/m:component',ns):
+  childpath=c.get(prod+'path',path).lstrip('/')
+  for p in points(childpath,c.get('objectid')): yield transform(p,matrix(c))
+doc=ET.fromstring(z.read('3D/3dmodel.model')); vertices=[]
+for item in doc.findall('m:build/m:item',ns):
+ if item.get('printable','1')=='1': vertices.extend(transform(p,matrix(item)) for p in points('3D/3dmodel.model',item.get('objectid')))
+assert vertices,'no printable mesh'
+lo=[min(p[i] for p in vertices) for i in range(3)]; hi=[max(p[i] for p in vertices) for i in range(3)]
+area=[list(map(float,v.split('x'))) for v in cfg['printable_area']]; bedlo=[min(p[i] for p in area) for i in range(2)]+[0]; bedhi=[max(p[i] for p in area) for i in range(2)]+[float(cfg['printable_height'])]
+result={'printer':cfg.get('printer_model'),'bounds':[lo,hi],'bed':[bedlo,bedhi],'supports':cfg.get('enable_support'),'pass':False}
+print(json.dumps(result))
+assert all(lo[i]>=bedlo[i]-0.01 and hi[i]<=bedhi[i]+0.01 for i in range(3)), 'model outside build volume'
+assert abs(lo[2])<0.01,'model not resting on build plate'
+assert cfg.get('printer_model') in ['Bambu Lab H2D','Bambu Lab H3C'],'wrong printer profile'
+assert all(abs((hi[i]-lo[i])-v)<0.02 for i,v in enumerate([280,200,226.134736])),'unexpected scaling or rotation'
+# The single-material mesh must fit at least one individual nozzle reach area.
+regions=cfg.get('extruder_printable_area',[])
+if regions:
+ boxes=[[list(map(float,p.split('x'))) for p in s.split(',')] for s in regions if s]
+ assert any(all(lo[i]>=min(p[i] for p in box)-0.01 and hi[i]<=max(p[i] for p in box)+0.01 for i in range(2)) for box in boxes),'model outside all individual nozzle reach areas'
+result['pass']=True;print(json.dumps(result))
+`, process.argv[2]], {windowsHide:true, encoding:'utf8'});
+ process.stdout.write(result.stdout ?? '');
+ process.stderr.write(result.stderr ?? '');
+ if (result.error) console.error(result.error.message);
+ process.exit(result.status ?? 1);
+}
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-const path = process.argv[2] ?? 'build/stl/77-inch-industrial-shelves-300mm-deep-organizer.stl';
+const path = process.argv[2] ?? 'build/stl/77-inch-industrial-shelves-280mm-deep-organizer.stl';
 const b = fs.readFileSync(path);
 const n = b.readUInt32LE(80);
 assert.equal(b.length,84+50*n,'binary STL length');
@@ -53,16 +94,16 @@ function depthAt(u,v,depth) {
 }
 // Probe center and inner rim of every opening, then adjacent solid material.
 for(let col=0;col<4;col++)for(let row=0;row<5;row++){
- const u=26.175+25.4*col,v=12.7+25.4*row;
+ const u=16.175+25.4*col,v=12.7+25.4*row;
  for(const [du,dv] of [[0,0],[6.2,0],[-6.2,0],[0,6.2],[0,-6.2]])depthAt(u+du,v+dv,101.6);
  depthAt(u+6.5,v,0);depthAt(u,v+6.5,0);
 }
 for(let col=0;col<3;col++)for(let row=0;row<2;row++){
- const u=115.075+57.15*col+25.4,v=9.525+57.15*row+25.4;
+ const u=105.075+57.15*col+25.4,v=9.525+57.15*row+25.4;
  for(const [du,dv] of [[0,0],[25.3,25.3],[-25.3,25.3],[25.3,-25.3],[-25.3,-25.3]])depthAt(u+du,v+dv,101.6);
  depthAt(u+25.5,v,0);depthAt(u,v+25.5,0);
 }
-for(let k=0;k<3;k++){assert.ok(Math.abs(lo[k]-[0,0,-50][k])<0.01);assert.ok(Math.abs(hi[k]-[300,200,10+(127+107.95)*c][k])<0.01)}
+for(let k=0;k<3;k++){assert.ok(Math.abs(lo[k]-[0,0,-50][k])<0.01);assert.ok(Math.abs(hi[k]-[280,200,10+(127+107.95)*c][k])<0.01)}
 // Mounting gap is clear, rear wall starts at y=130 and front wall at y=92.
 assert.ok(Math.abs(firstHit([75,120,-5],[0,1,0])-10)<0.01);
 assert.ok(Math.abs(firstHit([75,120,-5],[0,-1,0])-6)<0.01);

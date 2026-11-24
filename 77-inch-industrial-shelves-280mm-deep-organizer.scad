@@ -1,5 +1,5 @@
 /**
- * 77-inch-industrial-shelves-300mm-deep-organizer.scad — 300 x 200 rail shelf with angled organizer.
+ * 77-inch-industrial-shelves-280mm-deep-organizer.scad — 280 x 200 rail shelf with angled organizer.
  *
  * Coordinate System:
  *   X = Width  (positive = right) — across the shelf
@@ -15,11 +15,11 @@
  *
  * | Component    | Origin [X,Y,Z]   | Size [W,D,H]      | Attaches To       |
  * |--------------|------------------|-------------------|-------------------|
- * | shelf_body   | [0,    0,    0]  | [300, 200,  10]  | (sits on bar)     |
- * | back_wall    | [0,  195,   10]  | [300,   5,  50]  | shelf_body top    |
- * | front_ledge  | [0,    0,   10]  | [300,   2,   3]  | shelf_body top    |
- * | drop_wall_a  | [0,  130,  -50]  | [300,   5,  50]  | shelf_body bottom |
- * | drop_wall_b  | [0,   92,  -10]  | [300,  22,  10]  | shelf_body bottom |
+ * | shelf_body   | [0,    0,    0]  | [280, 200,  10]  | (sits on bar)     |
+ * | back_wall    | [0,  195,   10]  | [280,   5,  50]  | shelf_body top    |
+ * | front_ledge  | [0,    0,   10]  | [280,   2,   3]  | shelf_body top    |
+ * | drop_wall_a  | [0,  130,  -50]  | [280,   5,  50]  | shelf_body bottom |
+ * | drop_wall_b  | [0,   92,  -10]  | [280,  22,  10]  | shelf_body bottom |
  */
 
 $fn = 64;
@@ -32,7 +32,7 @@ $fn = 64;
 // shelf_width_mm and shelf_depth_mm can be overridden by a wrapper file by
 // setting `shelf_width_override` / `shelf_depth_override` BEFORE doing
 // `include<bar-shelf.scad>`.
-shelf_width_mm     = is_undef(shelf_width_override) ? 300 : shelf_width_override;
+shelf_width_mm     = is_undef(shelf_width_override) ? 280 : shelf_width_override;
 shelf_depth_mm     = is_undef(shelf_depth_override) ? 200 : shelf_depth_override;
 shelf_thickness_mm = 10;
 shelf_bottom_round_mm = 2;   // Fillet on bottom-front and bottom-back edges
@@ -97,7 +97,7 @@ zip_tie_slot_y_back  = drop_a_back_y  + zip_tie_offset_mm;  // 95
  * shelf_body
  *
  * Position:    Origin [0, 0, 0]
- * Bounding:    [0, 0, 0] to [300, 200, 10]
+ * Bounding:    [0, 0, 0] to [280, 200, 10]
  * Notes:       Bottom-front and bottom-back edges are filleted with radius
  *              shelf_bottom_round_mm. Top is left sharp so the back_wall and
  *              front_ledge meet it cleanly. Three zip-tie slots are subtracted
@@ -157,7 +157,7 @@ module zip_tie_slots() {
  * back_wall
  *
  * Position:    Origin [0, shelf_depth_mm - back_wall_thickness_mm, shelf_thickness_mm]
- * Bounding:    [0, 195, 10] to [300, 200, 60]
+ * Bounding:    [0, 195, 10] to [280, 200, 60]
  * Notes:       Sits flush on top of the rear edge of the shelf.
  *              Top edges (front-top and back-top, running along X) are rounded.
  *              Bottom is sharp where it meets the shelf top.
@@ -188,7 +188,7 @@ module back_wall() {
  * front_ledge
  *
  * Position:    Origin [0, 0, shelf_thickness_mm]
- * Bounding:    [0, 0, 10] to [300, 2, 13]
+ * Bounding:    [0, 0, 10] to [280, 2, 13]
  * Notes:       Small upturned lip along the front edge of the shelf to keep
  *              items from sliding off. 3mm tall, 2mm thick (Y), with rounded
  *              top edges.
@@ -240,7 +240,7 @@ module drop_wall(y_front, y_back, drop, r) {
  * drop_wall_a (rear drop wall)
  *
  * Position:   [0, drop_a_front_y, -rear_wall_height_mm]
- * Bounding:   [0, 130, -50] to [300, 135, 0]
+ * Bounding:   [0, 130, -50] to [280, 135, 0]
  */
 module drop_wall_a() {
     drop_wall(drop_a_front_y, drop_a_back_y, rear_wall_height_mm, drop_a_round_mm);
@@ -250,7 +250,7 @@ module drop_wall_a() {
  * drop_wall_b (front drop wall)
  *
  * Position:   [0, drop_b_front_y, -border_height_mm]
- * Bounding:   [0, 92, -10] to [300, 114, 0]
+ * Bounding:   [0, 92, -10] to [280, 114, 0]
  */
 module drop_wall_b() {
     drop_wall(drop_b_front_y, drop_b_back_y, border_height_mm, drop_b_round_mm);
@@ -330,7 +330,7 @@ assert(organizer_edge_x_mm >= organizer_wall_mm);
 assert(bin_start_v_mm >= organizer_wall_mm);
 
 // COMPONENT INDEX (in addition to the unchanged shelf components above):
-// organizer_outer: [0,16.9326,9.5] to [300,183.0674,176.1347]; joins shelf top.
+// organizer_outer: [0,16.9326,9.5] to [280,183.0674,176.1347]; joins shelf top.
 // pen_voids: 20 diameter-12.7 blind bores; 101.6 axial depth; v=12.7..114.3.
 // bin_voids: 6 square-50.8 blind pockets; 101.6 axial depth; 6.35 clear gaps.
 // organizer_block: outer less voids, closed ends and solid support to shelf.
@@ -345,7 +345,7 @@ module organizer_frame() {
 }
 
 // Extruded side polygon, full shelf width; underside overlaps shelf by 0.5 mm.
-// Bound [0,front,9.5]..[300,back,peak]; closed roof/back and solid foot.
+// Bound [0,front,9.5]..[280,back,peak]; closed roof/back and solid foot.
 module organizer_outer() {
     multmatrix([[0,0,1,0],[1,0,0,0],[0,1,0,0],[0,0,0,1]])
         linear_extrude(height=shelf_width_mm)
@@ -370,7 +370,7 @@ module pen_voids() {
 }
 
 // Six square pockets occupy the remaining face, three columns by two rows.
-// Local bound [bin_start_x,bin_start_v,-1] to [280.175,117.475,101.6].
+// Local bound [bin_start_x,bin_start_v,-1] to [270.175,117.475,101.6].
 module bin_voids() {
     organizer_frame()
         for (col=[0:bin_columns-1], row=[0:bin_rows-1])

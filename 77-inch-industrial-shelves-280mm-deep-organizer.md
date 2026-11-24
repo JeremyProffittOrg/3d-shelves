@@ -1,11 +1,11 @@
-# 300 x 200 mm industrial rail shelf with angled organizer
+# 280 x 200 mm industrial rail shelf with angled organizer
 
 Integral organizer on the existing industrial rail shelf. All openings face forward and upward at 45 degrees. Pockets have closed ends. The 16 mm rail gap, drop walls, rear wall, retaining lip and zip-tie channels use the original shelf geometry.
 
 ## Dimensions
-- Shelf footprint: 300 x 200 mm.
-- Complete bounding box: X 0..300, Y 0..200, Z -50..176.1347 mm (226.1347 mm total height).
-- Organizer face: 300 mm across x 127 mm along the slope.
+- Shelf footprint: 280 x 200 mm.
+- Complete bounding box: X 0..280, Y 0..200, Z -50..176.1347 mm (226.1347 mm total height).
+- Organizer face: 280 mm across x 127 mm along the slope.
 - Pens: 4 columns x 5 rows, 20 holes; 12.7 mm diameter, 12.7 mm clear gaps (25.4 mm pitch).
 - Square pockets: 3 columns x 2 rows; 50.8 x 50.8 mm clear openings; 6.35 mm clear gaps.
 - All pockets: 101.6 mm deep along the 45-degree axis, with 6.35 mm minimum end material.
@@ -30,10 +30,10 @@ Side (front at left):
     =======|=====|=== shelf
             | |      rail capture walls
 ```
-Top: 300 x 200 mm shelf; organizer spans full width and Y 16.9326..183.0674 mm. Original rear wall at Y 195..200 mm.
+Top: 280 x 200 mm shelf; organizer spans full width and Y 16.9326..183.0674 mm. Original rear wall at Y 195..200 mm.
 
 ## Components
-- shelf_body, back_wall, front_ledge, drop_wall_a, drop_wall_b, zip_tie_slots: original shelf geometry, sized 300 x 200 mm.
+- shelf_body, back_wall, front_ledge, drop_wall_a, drop_wall_b, zip_tie_slots: original shelf geometry, sized 280 x 200 mm.
 - organizer_frame: local-to-world transform. Local v runs uphill; local w runs down and rearward into the pockets.
 - organizer_outer: closed extruded polygon with a flat foot; overlaps shelf by 0.5 mm.
 - pen_voids: twenty cylindrical blind cutters.
@@ -43,18 +43,19 @@ Top: 300 x 200 mm shelf; organizer spans full width and Y 16.9326..183.0674 mm. 
 - debug_axes, assembly_colored and organizer_assembly_colored: inspection helpers.
 
 ## Assembly and printing
-Single integral mesh. No glue or bolts are needed between organizer and shelf. Material, load capacity, supports and print orientation require printer-specific review. Do not reuse the original bare-shelf no-support recommendation for this taller organizer. No slicing or printing has been requested. A 300 mm part exceeds a 256 mm build plate in its current orientation; select a compatible machine or make an explicit splitting decision before printing. The rail fit has not been physically tested with the added load.
+Single integral mesh. No glue or bolts are needed between organizer and shelf. Material, load capacity, supports and print orientation require printer-specific review. Do not reuse the original bare-shelf no-support recommendation for this taller organizer. H2D and H3C projects are built from installed 0.4 mm nozzle profiles with 0.20 mm Standard process, Generic PLA and automatic supports. The 280 mm width leaves more placement clearance than the original 300 mm model. No printing is performed. The rail fit has not been physically tested with the added load.
 
 ## Verification
 Run from C:/dev/archive/3d-shelves:
 ```bat
-"C:\Program Files\OpenSCAD\openscad.com" --export-format=binstl -o "build\stl\77-inch-industrial-shelves-300mm-deep-organizer.stl" "77-inch-industrial-shelves-300mm-deep-organizer.scad"
+"C:\Program Files\OpenSCAD\openscad.com" --export-format=binstl -o "build\stl\77-inch-industrial-shelves-280mm-deep-organizer.stl" "77-inch-industrial-shelves-280mm-deep-organizer.scad"
 node verify-organizer.mjs
 ```
 The mesh check tests manifold edges, consistent face winding, one connected component, bounds, 182 pocket/face depth probes, and the rail capture gap. Previews are generated through OpenSCAD CLI; Bambu Studio is opened through its CLI only.
 
 ## Changelog
-2026-11-23: Added the 300 x 200 mm shelf with 20 angled pen holes and six angled square pockets.
+2026-11-23: Added the original 300 x 200 mm shelf with 20 angled pen holes and six angled square pockets.
+2026-11-23: Reduced width to 280 mm, preserved pocket and rail dimensions, and added printer-specific project generation and fit verification.
 
 ## Dimension variable reference
 
@@ -62,7 +63,7 @@ Values below are expressions from the source; all are in millimeters.
 
 | Variable | Value / derivation |
 |---|---|
-| shelf_width_mm | is_undef(shelf_width_override) ? 300 : shelf_width_override |
+| shelf_width_mm | is_undef(shelf_width_override) ? 280 : shelf_width_override |
 | shelf_depth_mm | is_undef(shelf_depth_override) ? 200 : shelf_depth_override |
 | shelf_thickness_mm | 10 |
 | shelf_bottom_round_mm | 2 |
@@ -108,3 +109,9 @@ Values below are expressions from the source; all are in millimeters.
 | organizer_edge_x_mm | (shelf_width_mm - pen_span_x_mm - organizer_wall_mm - bin_span_x_mm) / 2 |
 | bin_start_x_mm | organizer_edge_x_mm + pen_span_x_mm + organizer_wall_mm |
 | bin_start_v_mm | (organizer_face_height_mm - bin_span_v_mm) / 2 |
+
+## Printer-specific project build
+
+Internal build helper: `python build-organizer-projects.py H2D H3C`. It resolves installed preset inheritance, enables automatic supports, disables the unneeded prime tower for this single-material part, arranges and slices, then checks the exported 3MF against the actual printer build volume and individual nozzle reach. No print is transmitted. Files are written under `build/organizer/h2d/` and `build/organizer/h3c/`.
+
+Command-line reference: https://github.com/bambulab/BambuStudio/wiki/Command-Line-Usage
