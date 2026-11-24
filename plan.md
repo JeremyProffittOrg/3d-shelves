@@ -68,7 +68,7 @@ Files: build-organizer-projects.py; verify-organizer.mjs; organizer design Markd
 - [x] printer-project-build — Build with resolved installed H2D/H3C 0.4 mm machine, 0.20 mm process and Generic PLA presets, arrange within printable area.
 - [x] printer-project-check — node verify-organizer.mjs <project.3mf> passes transformed build-volume, bed contact, machine name and individual-nozzle reach checks for both models. Bambu CLI slicing must succeed before claiming slice validation.
 - [x] printer-project-open — Open corrected H2D project via CLI and retain H3C project for selection.
-- [ ] printer-project-save — Commit only task changes and push. No SCAD change is necessary.
+- [x] printer-project-save — Commit only task changes and push. No SCAD change is necessary.
 Job policy: each Bambu export/slice has a 10-minute timeout, logs and PID. Maximum two corrected retries per failure class. No print transmission.
 Execution: initial 3MF verification failed on out-of-volume placement; installed profiles show H2D nozzle reach 325 x 320 x 325 mm and H3C area 330 x 320 x 325 mm. Local profile facts, not a guessed printer specification.
 
@@ -98,6 +98,13 @@ Proof: existing mesh check extended for five square openings, their floors/walls
 ## shallow-front-bins — Reduce only the five front compartment depths
 2026-11-23 locked correction (verbatim): "nope, make them 20mm tall instead fo 100". Interpret consistently as usable inside floor-to-opening depth: 20 mm. Preserve square widths, layout, angled organizer height, rail fit and shelf footprint.
 Files: organizer SCAD, corresponding Markdown, README design section, verify-organizer.mjs, plan.md. Proof: mesh probe must read 20 mm usable front-pocket depth; both printer projects must slice and pass fit checks.
-- [~] shallow-bin-geometry — Regenerate STL and previews; node verify-organizer.mjs passes.
-- [ ] shallow-bin-projects — Regenerate H2D/H3C 3MFs; slice return code 0 and fit check pass.
-- [ ] shallow-bin-delivery — Open revised model and push focused commit; release workflow success.
+- [x] shallow-bin-geometry — Regenerate STL and previews; node verify-organizer.mjs passes.
+- [x] shallow-bin-projects — Regenerate H2D/H3C 3MFs; slice return code 0 and fit check pass.
+- [x] shallow-bin-delivery — Open revised model and push focused commit; release workflow success.
+
+- Shallow-bin geometry and both previews exported with exit 0. node verify-organizer.mjs PASS: five front pockets at exactly 20 mm usable depth; 207 depth probes; unchanged overall bounds, angled pockets and rail gap.
+- Latest H2D and H3C builds both exited 0, returned slice code 0 and passed 3MF fit checks. Receipts updated in build/organizer/{h2d,h3c}/fit-check.json.
+- Updated editable H2D project opened with CLI, PID 18512. Source commit e7400571f0bd22825ee7d482753f0e0fcb451b6b pushed; workflow 45302194220 monitored.
+
+- Final 20 mm revision release run 45302194220 reached completed/success; latest tag equals e7400571f0bd22825ee7d482753f0e0fcb451b6b and all three expected STL/PNG assets are present and nonempty. Receipt build/organizer/shallow-release.json.
+- Superseded 100 mm release run 45301866176 was still installing OpenSCAD after the latest revision finished. Requested cancellation through GitHub API (HTTP 202) to prevent an obsolete release replacing the latest model. Authentication used configured Git credential helper only in process memory; no credentials were printed or stored.

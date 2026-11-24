@@ -130,3 +130,7 @@ Command-line reference: https://github.com/bambulab/BambuStudio/wiki/Command-Lin
 
 
 2026-11-23: Front compartments reduced to 20 mm usable vertical depth at the user’s request. Remaining geometry unchanged.
+
+## Current printer verification
+
+The 20 mm-front-pocket revision passed mesh and depth checks plus H2D and H3C CLI slicing (exit 0, no warnings) using the installed 0.4 mm nozzle profiles, 0.20 mm layers, Generic PLA, 15% infill and normal automatic supports. 3MF build-volume and nozzle-reach checks passed for both printers. No print was sent.
