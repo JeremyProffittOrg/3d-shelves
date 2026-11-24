@@ -29,6 +29,7 @@ def build(model):
     machine['printer_settings_id'] = machine['name']
     process['print_settings_id'] = process['name']
     process['enable_support'] = '1'
+    process['support_type'] = 'normal(auto)'
     process['enable_prime_tower'] = '0'
     filament['filament_settings_id'] = [filament['name']]
     for name, config in [('machine', machine), ('process', process), ('filament', filament)]:

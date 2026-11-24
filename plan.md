@@ -1,10 +1,10 @@
 # Angled shelf organizer
 
 ## Outcome
-Create a 300 x 200 mm industrial rail shelf with 20 pen bores (4 across x 5 high), six square pockets (3 across x 2 high), all opening upward/frontward at 45 degrees. Open the STL in Bambu Studio through its command line.
+Create a 280 x 230 mm industrial rail shelf with 20 pen bores (4 across x 5 high), six square pockets (3 across x 2 high) opening upward/frontward at 45 degrees, plus five square front pockets with top openings and 100 mm vertical depth. Build H2D and H3C projects with the installed 0.4 mm profiles, validate slicing and fit, and open the corrected project through the Bambu Studio command line.
 
 ## Non-goals
-No changes to existing shelf geometry, other designs, printer settings, slicing, or printing.
+No physical printing, printer communication, firmware changes, or changes to other shelf designs. Only organizer width and its project setup change.
 
 ## Locked decisions (user-confirmed; do not revisit)
 2026-11-23 request: "so take the 300mm long 200mm deep, and let's add a stack on top of it with pen holder and orginizers at a 45 degree opening, let's do 4 rows of pen holes, 1/2 inch each with 1/2 beween and 4 inches deep, 5 tall, and multiple orginizer square cut outs 2 inches squared 4 inches deep, 1/4 inches appart for the rest of the space and height. open in bambu labs"
@@ -76,3 +76,16 @@ Execution: initial 3MF verification failed on out-of-volume placement; installed
 - Revised scoped outcome: reduce shelf width to 280 mm (from 300) while preserving all pocket diameters, depths, clear gaps, height and rail dimensions. Recenter the pocket pattern using its existing formulas. This leaves 20 mm extra width in the H2D shared nozzle region. Update existing SCAD, mesh check, previews and design docs in addition to printer-project build files.
 
 - Resized mesh: node verify-organizer.mjs PASS, width 280 mm, depth 200 mm, height 226.134736 mm; 20 pen holes and six square pockets retain their requested sizes and 101.6 mm depths. Sources and output renamed to 77-inch-industrial-shelves-280mm-deep-organizer.
+
+## front-compartments — Add five top-opening compartments and move organizer to back
+2026-11-23 user request: "okay, but expand it to fill the entire shelf, by pushing it to the back includsive of the bck wall and adding small square boxes along the front opening from the top, 5 across, each 100mm deep".
+- [x] front-compartment-depth — Clarification pending: 100 mm downward pocket depth versus 100 mm front-to-back extent. Existing H2D/H3C slicing jobs stopped because this geometry is superseded.
+- [x] front-compartment-layout — Move angled organizer to rear, integrate existing back wall, add five top-opening square compartments without interfering with angled pocket interiors. Preserve rail dimensions.
+
+2026-11-23 clarification (verbatim): "`100mm from bottom to top pening, the depth of the square box". Locked: front pocket depth is 100 mm vertically from inside floor to top opening.
+Layout: 280 x 230 mm shelf; angled body flush to rear edge and integrated with rear wall; raised 31.75 mm to clear front boxes; five 48.38 mm square top openings, 100 mm usable depth, 6.35 mm walls/floors. Total height including rail walls 257.884736 mm.
+Proof: existing mesh check extended for five square openings, their floors/walls, and unobstructed lowest-row pen access. Both printer-specific 3MF checks must pass with 280 x 230 footprint and 257.884736 height; supports enabled for slicing.
+
+- Front-bin mesh check passed: 6,624 triangles, one watertight connected component, 207 pocket probes, five front pockets at 100 mm vertical depth, unchanged 16 mm rail gap, and clear lowest-row pen exit rays.
+- Front and rear previews generated successfully and inspected. H2D editable project passed transformed placement and rigid-transform checks; opened via CLI, PID 42632.
+- Automatic support type changed from tree to normal for this broad flat underside, avoiding expensive tree branching. Both latest model slicing jobs tracked under build/organizer/{h2d,h3c}/job.json with 600-second ceilings.

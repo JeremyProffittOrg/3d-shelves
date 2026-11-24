@@ -1,5 +1,5 @@
 /**
- * 77-inch-industrial-shelves-280mm-deep-organizer.scad — 280 x 200 rail shelf with angled organizer.
+ * 77-inch-industrial-shelves-280mm-deep-organizer.scad — 280 x 230 rail shelf with angled organizer.
  *
  * Coordinate System:
  *   X = Width  (positive = right) — across the shelf
@@ -15,11 +15,11 @@
  *
  * | Component    | Origin [X,Y,Z]   | Size [W,D,H]      | Attaches To       |
  * |--------------|------------------|-------------------|-------------------|
- * | shelf_body   | [0,    0,    0]  | [280, 200,  10]  | (sits on bar)     |
- * | back_wall    | [0,  195,   10]  | [280,   5,  50]  | shelf_body top    |
+ * | shelf_body   | [0,    0,    0]  | [280, 230,  10]  | (sits on bar)     |
+ * | back_wall    | [0,  225,   10]  | [280,   5,  50]  | shelf_body top    |
  * | front_ledge  | [0,    0,   10]  | [280,   2,   3]  | shelf_body top    |
- * | drop_wall_a  | [0,  130,  -50]  | [280,   5,  50]  | shelf_body bottom |
- * | drop_wall_b  | [0,   92,  -10]  | [280,  22,  10]  | shelf_body bottom |
+ * | drop_wall_a  | [0,  160,  -50]  | [280,   5,  50]  | shelf_body bottom |
+ * | drop_wall_b  | [0,  122,  -10]  | [280,  22,  10]  | shelf_body bottom |
  */
 
 $fn = 64;
@@ -33,7 +33,7 @@ $fn = 64;
 // setting `shelf_width_override` / `shelf_depth_override` BEFORE doing
 // `include<bar-shelf.scad>`.
 shelf_width_mm     = is_undef(shelf_width_override) ? 280 : shelf_width_override;
-shelf_depth_mm     = is_undef(shelf_depth_override) ? 200 : shelf_depth_override;
+shelf_depth_mm     = is_undef(shelf_depth_override) ? 230 : shelf_depth_override;
 shelf_thickness_mm = 10;
 shelf_bottom_round_mm = 2;   // Fillet on bottom-front and bottom-back edges
 
@@ -97,7 +97,7 @@ zip_tie_slot_y_back  = drop_a_back_y  + zip_tie_offset_mm;  // 95
  * shelf_body
  *
  * Position:    Origin [0, 0, 0]
- * Bounding:    [0, 0, 0] to [280, 200, 10]
+ * Bounding:    [0, 0, 0] to [280, 230, 10]
  * Notes:       Bottom-front and bottom-back edges are filleted with radius
  *              shelf_bottom_round_mm. Top is left sharp so the back_wall and
  *              front_ledge meet it cleanly. Three zip-tie slots are subtracted
@@ -157,7 +157,7 @@ module zip_tie_slots() {
  * back_wall
  *
  * Position:    Origin [0, shelf_depth_mm - back_wall_thickness_mm, shelf_thickness_mm]
- * Bounding:    [0, 195, 10] to [280, 200, 60]
+ * Bounding:    [0, 225, 10] to [280, 230, 60]
  * Notes:       Sits flush on top of the rear edge of the shelf.
  *              Top edges (front-top and back-top, running along X) are rounded.
  *              Bottom is sharp where it meets the shelf top.
@@ -240,7 +240,7 @@ module drop_wall(y_front, y_back, drop, r) {
  * drop_wall_a (rear drop wall)
  *
  * Position:   [0, drop_a_front_y, -rear_wall_height_mm]
- * Bounding:   [0, 130, -50] to [280, 135, 0]
+ * Bounding:   [0, 160, -50] to [280, 165, 0]
  */
 module drop_wall_a() {
     drop_wall(drop_a_front_y, drop_a_back_y, rear_wall_height_mm, drop_a_round_mm);
@@ -250,7 +250,7 @@ module drop_wall_a() {
  * drop_wall_b (front drop wall)
  *
  * Position:   [0, drop_b_front_y, -border_height_mm]
- * Bounding:   [0, 92, -10] to [280, 114, 0]
+ * Bounding:   [0, 122, -10] to [280, 144, 0]
  */
 module drop_wall_b() {
     drop_wall(drop_b_front_y, drop_b_back_y, border_height_mm, drop_b_round_mm);
@@ -299,6 +299,14 @@ pen_diameter_mm = 12.7;
 pen_clear_gap_mm = 12.7;
 pocket_depth_mm = 101.6;
 organizer_wall_mm = 6.35;
+organizer_lift_mm = 31.75;
+front_bin_count = 5;
+front_bin_depth_mm = 100;
+front_bin_wall_mm = 6.35;
+front_bin_floor_mm = 6.35;
+front_bin_size_mm = (shelf_width_mm - (front_bin_count+1)*front_bin_wall_mm)/front_bin_count;
+front_bin_floor_z_mm = shelf_thickness_mm + front_bin_floor_mm;
+front_bin_top_z_mm = front_bin_floor_z_mm + front_bin_depth_mm;
 organizer_angle_deg = 45;
 organizer_join_mm = 0.5;
 cut_overshoot_mm = 1;
@@ -316,8 +324,8 @@ organizer_body_depth_mm = pocket_depth_mm + organizer_wall_mm;
 organizer_cos = cos(organizer_angle_deg);
 organizer_sin = sin(organizer_angle_deg);
 organizer_footprint_mm = organizer_face_height_mm * organizer_cos + organizer_body_depth_mm * organizer_sin;
-organizer_front_y_mm = (shelf_depth_mm - organizer_footprint_mm) / 2;
-organizer_face_z_mm = shelf_thickness_mm + organizer_body_depth_mm * organizer_cos;
+organizer_front_y_mm = shelf_depth_mm - organizer_footprint_mm;
+organizer_face_z_mm = shelf_thickness_mm + organizer_lift_mm + organizer_body_depth_mm * organizer_cos;
 organizer_peak_z_mm = organizer_face_z_mm + organizer_face_height_mm * organizer_sin;
 organizer_back_y_mm = organizer_front_y_mm + organizer_footprint_mm;
 organizer_edge_x_mm = (shelf_width_mm - pen_span_x_mm - organizer_wall_mm - bin_span_x_mm) / 2;
@@ -325,12 +333,15 @@ bin_start_x_mm = organizer_edge_x_mm + pen_span_x_mm + organizer_wall_mm;
 bin_start_v_mm = (organizer_face_height_mm - bin_span_v_mm) / 2;
 
 assert(organizer_front_y_mm >= front_ledge_depth_mm);
-assert(organizer_back_y_mm <= shelf_depth_mm - back_wall_thickness_mm);
+assert(organizer_back_y_mm <= shelf_depth_mm);
+assert(organizer_front_y_mm >= front_bin_size_mm + 2*front_bin_wall_mm);
+assert(organizer_face_z_mm > front_bin_top_z_mm);
 assert(organizer_edge_x_mm >= organizer_wall_mm);
 assert(bin_start_v_mm >= organizer_wall_mm);
 
 // COMPONENT INDEX (in addition to the unchanged shelf components above):
-// organizer_outer: [0,16.9326,9.5] to [280,183.0674,176.1347]; joins shelf top.
+// organizer_outer: [0,63.8653,9.5] to [280,230,207.8847]; joins shelf and absorbs back wall.
+// front_bins: five 48.38 mm square openings, 100 mm vertical depth; top Z=116.35.
 // pen_voids: 20 diameter-12.7 blind bores; 101.6 axial depth; v=12.7..114.3.
 // bin_voids: 6 square-50.8 blind pockets; 101.6 axial depth; 6.35 clear gaps.
 // organizer_block: outer less voids, closed ends and solid support to shelf.
@@ -389,15 +400,31 @@ module organizer_block() {
     }
 }
 
+// Front row joins the full shelf width to the angled organizer with no rear gap.
+// Bound [0,0,9.5]..[280,64.3653,116.35]. Five blind square cutters open upward.
+module front_bins() {
+    difference() {
+        translate([0,0,shelf_thickness_mm-organizer_join_mm])
+            cube([shelf_width_mm,organizer_front_y_mm+organizer_join_mm,
+                  front_bin_top_z_mm-shelf_thickness_mm+organizer_join_mm]);
+        for (col=[0:front_bin_count-1])
+            translate([front_bin_wall_mm+col*(front_bin_size_mm+front_bin_wall_mm),
+                       front_bin_wall_mm,front_bin_floor_z_mm])
+                cube([front_bin_size_mm,front_bin_size_mm,front_bin_depth_mm+cut_overshoot_mm]);
+    }
+}
+
 module organizer_assembly_colored() {
     color("steelblue") assembly();
     color("lightgray") organizer_block();
+    color("gold") front_bins();
 }
 
 module organizer_assembly() {
     union() {
         assembly();
         organizer_block();
+        front_bins();
     }
 }
 

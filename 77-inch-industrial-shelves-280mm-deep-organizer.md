@@ -1,15 +1,18 @@
-# 280 x 200 mm industrial rail shelf with angled organizer
+# 280 x 230 mm industrial rail shelf with angled organizer
 
 Integral organizer on the existing industrial rail shelf. All openings face forward and upward at 45 degrees. Pockets have closed ends. The 16 mm rail gap, drop walls, rear wall, retaining lip and zip-tie channels use the original shelf geometry.
 
 ## Dimensions
-- Shelf footprint: 280 x 200 mm.
-- Complete bounding box: X 0..280, Y 0..200, Z -50..176.1347 mm (226.1347 mm total height).
+- Shelf footprint: 280 x 230 mm.
+- Complete bounding box: X 0..280, Y 0..230, Z -50..207.8847 mm (257.8847 mm total height).
 - Organizer face: 280 mm across x 127 mm along the slope.
 - Pens: 4 columns x 5 rows, 20 holes; 12.7 mm diameter, 12.7 mm clear gaps (25.4 mm pitch).
 - Square pockets: 3 columns x 2 rows; 50.8 x 50.8 mm clear openings; 6.35 mm clear gaps.
 - All pockets: 101.6 mm deep along the 45-degree axis, with 6.35 mm minimum end material.
 - The clarification "yes" was interpreted as 4 across x 5 high, not a 5-inch overall vertical height.
+
+- Front row: five 48.38 x 48.38 mm square openings, 100 mm vertically from floor to opening; 6.35 mm walls and floors.
+- Front rim at Z 116.35 mm. Angled organizer raised 31.75 mm so its lowest openings remain accessible.
 
 ## Views
 Front (face-local view):
@@ -30,10 +33,10 @@ Side (front at left):
     =======|=====|=== shelf
             | |      rail capture walls
 ```
-Top: 280 x 200 mm shelf; organizer spans full width and Y 16.9326..183.0674 mm. Original rear wall at Y 195..200 mm.
+Top: 280 x 230 mm shelf; organizer spans full width and Y 63.8653..230 mm. The original rear wall at Y 225..230 mm is integrated into the organizer body.
 
 ## Components
-- shelf_body, back_wall, front_ledge, drop_wall_a, drop_wall_b, zip_tie_slots: original shelf geometry, sized 280 x 200 mm.
+- shelf_body, back_wall, front_ledge, drop_wall_a, drop_wall_b, zip_tie_slots: original shelf geometry, sized 280 x 230 mm.
 - organizer_frame: local-to-world transform. Local v runs uphill; local w runs down and rearward into the pockets.
 - organizer_outer: closed extruded polygon with a flat foot; overlaps shelf by 0.5 mm.
 - pen_voids: twenty cylindrical blind cutters.
@@ -59,12 +62,10 @@ The mesh check tests manifold edges, consistent face winding, one connected comp
 
 ## Dimension variable reference
 
-Values below are expressions from the source; all are in millimeters.
-
-| Variable | Value / derivation |
+| Variable | Value / derivation (mm) |
 |---|---|
 | shelf_width_mm | is_undef(shelf_width_override) ? 280 : shelf_width_override |
-| shelf_depth_mm | is_undef(shelf_depth_override) ? 200 : shelf_depth_override |
+| shelf_depth_mm | is_undef(shelf_depth_override) ? 230 : shelf_depth_override |
 | shelf_thickness_mm | 10 |
 | shelf_bottom_round_mm | 2 |
 | back_wall_height_mm | 50 |
@@ -90,6 +91,13 @@ Values below are expressions from the source; all are in millimeters.
 | pen_clear_gap_mm | 12.7 |
 | pocket_depth_mm | 101.6 |
 | organizer_wall_mm | 6.35 |
+| organizer_lift_mm | 31.75 |
+| front_bin_depth_mm | 100 |
+| front_bin_wall_mm | 6.35 |
+| front_bin_floor_mm | 6.35 |
+| front_bin_size_mm | (shelf_width_mm - (front_bin_count+1)*front_bin_wall_mm)/front_bin_count |
+| front_bin_floor_z_mm | shelf_thickness_mm + front_bin_floor_mm |
+| front_bin_top_z_mm | front_bin_floor_z_mm + front_bin_depth_mm |
 | organizer_join_mm | 0.5 |
 | cut_overshoot_mm | 1 |
 | bin_size_mm | 50.8 |
@@ -102,8 +110,8 @@ Values below are expressions from the source; all are in millimeters.
 | organizer_face_height_mm | pen_span_v_mm + 2 * organizer_wall_mm |
 | organizer_body_depth_mm | pocket_depth_mm + organizer_wall_mm |
 | organizer_footprint_mm | organizer_face_height_mm * organizer_cos + organizer_body_depth_mm * organizer_sin |
-| organizer_front_y_mm | (shelf_depth_mm - organizer_footprint_mm) / 2 |
-| organizer_face_z_mm | shelf_thickness_mm + organizer_body_depth_mm * organizer_cos |
+| organizer_front_y_mm | shelf_depth_mm - organizer_footprint_mm |
+| organizer_face_z_mm | shelf_thickness_mm + organizer_lift_mm + organizer_body_depth_mm * organizer_cos |
 | organizer_peak_z_mm | organizer_face_z_mm + organizer_face_height_mm * organizer_sin |
 | organizer_back_y_mm | organizer_front_y_mm + organizer_footprint_mm |
 | organizer_edge_x_mm | (shelf_width_mm - pen_span_x_mm - organizer_wall_mm - bin_span_x_mm) / 2 |
@@ -115,3 +123,5 @@ Values below are expressions from the source; all are in millimeters.
 Internal build helper: `python build-organizer-projects.py H2D H3C`. It resolves installed preset inheritance, enables automatic supports, disables the unneeded prime tower for this single-material part, arranges and slices, then checks the exported 3MF against the actual printer build volume and individual nozzle reach. No print is transmitted. Files are written under `build/organizer/h2d/` and `build/organizer/h3c/`.
 
 Command-line reference: https://github.com/bambulab/BambuStudio/wiki/Command-Line-Usage
+
+2026-11-23: Added five 100 mm deep top-opening square front bins. Extended shelf depth to 230 mm, moved organizer flush to the rear and raised it 31.75 mm to retain access. Uses normal automatic supports for the broad flat underside.

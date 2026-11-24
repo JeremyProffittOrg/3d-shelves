@@ -7,7 +7,10 @@ prod='{http://schemas.microsoft.com/3dmanufacturing/production/2015/06}'
 identity=[1,0,0,0,1,0,0,0,1,0,0,0]
 def transform(p,t):
  return [sum(p[j]*t[j*3+i] for j in range(3))+t[9+i] for i in range(3)]
-def matrix(e): return list(map(float,e.get('transform','').split())) if e.get('transform') else identity
+def matrix(e):
+ t=list(map(float,e.get('transform','').split())) if e.get('transform') else identity
+ assert all(abs(sum(t[i*3+k]*t[j*3+k] for k in range(3))-(1 if i==j else 0))<0.00001 for i in range(3) for j in range(3)), 'non-rigid transform changes functional dimensions'
+ return t
 def points(path,oid):
  doc=ET.fromstring(z.read(path)); obj=doc.find('m:resources/m:object[@id="'+oid+'"]',ns)
  assert obj is not None, 'missing object'
@@ -26,7 +29,7 @@ print(json.dumps(result))
 assert all(lo[i]>=bedlo[i]-0.01 and hi[i]<=bedhi[i]+0.01 for i in range(3)), 'model outside build volume'
 assert abs(lo[2])<0.01,'model not resting on build plate'
 assert cfg.get('printer_model') in ['Bambu Lab H2D','Bambu Lab H3C'],'wrong printer profile'
-assert all(abs((hi[i]-lo[i])-v)<0.02 for i,v in enumerate([280,200,226.134736])),'unexpected scaling or rotation'
+assert all(abs(a-b)<0.02 for a,b in zip(sorted([hi[0]-lo[0],hi[1]-lo[1]]),[230,280])) and abs(hi[2]-lo[2]-257.884736)<0.02,'unexpected dimensions'
 # The single-material mesh must fit at least one individual nozzle reach area.
 regions=cfg.get('extruder_printable_area',[])
 if regions:
@@ -74,7 +77,7 @@ assert.equal(new Set(parent.map((_,i)=>find(i))).size,1,'single connected solid'
 const sub=(a,b)=>a.map((x,i)=>x-b[i]);
 const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
 const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-const c=Math.SQRT1_2, d=[0,c,-c], y0=(200-(127+107.95)*c)/2,z0=10+107.95*c;
+const c=Math.SQRT1_2, d=[0,c,-c], y0=230-(127+107.95)*c,z0=10+31.75+107.95*c;
 function firstHit(origin,dir) {
  let nearest=Infinity;
  for(const t of triangles) {
@@ -103,8 +106,21 @@ for(let col=0;col<3;col++)for(let row=0;row<2;row++){
  for(const [du,dv] of [[0,0],[25.3,25.3],[-25.3,25.3],[25.3,-25.3],[-25.3,-25.3]])depthAt(u+du,v+dv,101.6);
  depthAt(u+25.5,v,0);depthAt(u,v+25.5,0);
 }
-for(let k=0;k<3;k++){assert.ok(Math.abs(lo[k]-[0,0,-50][k])<0.01);assert.ok(Math.abs(hi[k]-[280,200,10+(127+107.95)*c][k])<0.01)}
-// Mounting gap is clear, rear wall starts at y=130 and front wall at y=92.
-assert.ok(Math.abs(firstHit([75,120,-5],[0,1,0])-10)<0.01);
-assert.ok(Math.abs(firstHit([75,120,-5],[0,-1,0])-6)<0.01);
-console.log(JSON.stringify({pass:true,triangles:n,components:1,watertight:true,bounds:[lo,hi],penHoles:20,squarePockets:6,pocketDepth:101.6,measurementRays:rays,railGap:16},null,2));
+for(let k=0;k<3;k++){assert.ok(Math.abs(lo[k]-[0,0,-50][k])<0.01);assert.ok(Math.abs(hi[k]-[280,230,10+31.75+(127+107.95)*c][k])<0.01)}
+// Mounting gap is clear, rear wall starts at y=160 and front wall at y=122.
+assert.ok(Math.abs(firstHit([75,150,-5],[0,1,0])-10)<0.01);
+assert.ok(Math.abs(firstHit([75,150,-5],[0,-1,0])-6)<0.01);
+// Five front pockets: square 48.38 mm openings and 100 mm vertical depth.
+for(let col=0;col<5;col++) {
+ const x=6.35+col*(48.38+6.35)+48.38/2,y=6.35+48.38/2;
+ for(const [dx,dy] of [[0,0],[24,24],[-24,24],[24,-24],[-24,-24]]) {
+  assert.ok(Math.abs(firstHit([x+dx,y+dy,117.35],[0,0,-1])-101)<0.025,'front pocket depth');rays++;
+ }
+ assert.ok(Math.abs(firstHit([x+24.3,y,117.35],[0,0,-1])-1)<0.025,'front pocket side wall');
+}
+// A pen can leave the lowest row along its axis without hitting the front bins.
+for(let col=0;col<4;col++) {
+ const u=16.175+25.4*col,v=12.7;
+ assert.equal(firstHit([u,y0+v*c-c,z0+v*c+c],[0,-c,c]),Infinity,'pen access blocked');
+}
+console.log(JSON.stringify({pass:true,triangles:n,components:1,watertight:true,bounds:[lo,hi],penHoles:20,squarePockets:6,frontPockets:5,frontPocketDepth:100,pocketDepth:101.6,measurementRays:rays,railGap:16},null,2));
