@@ -110,17 +110,17 @@ for(let k=0;k<3;k++){assert.ok(Math.abs(lo[k]-[0,0,-50][k])<0.01);assert.ok(Math
 // Mounting gap is clear, rear wall starts at y=160 and front wall at y=122.
 assert.ok(Math.abs(firstHit([75,150,-5],[0,1,0])-10)<0.01);
 assert.ok(Math.abs(firstHit([75,150,-5],[0,-1,0])-6)<0.01);
-// Five front pockets: square 48.38 mm openings and 100 mm vertical depth.
+// Five front pockets: square 48.38 mm openings and 20 mm vertical depth.
 for(let col=0;col<5;col++) {
  const x=6.35+col*(48.38+6.35)+48.38/2,y=6.35+48.38/2;
  for(const [dx,dy] of [[0,0],[24,24],[-24,24],[24,-24],[-24,-24]]) {
-  assert.ok(Math.abs(firstHit([x+dx,y+dy,117.35],[0,0,-1])-101)<0.025,'front pocket depth');rays++;
+  assert.ok(Math.abs(firstHit([x+dx,y+dy,37.35],[0,0,-1])-21)<0.025,'front pocket depth');rays++;
  }
- assert.ok(Math.abs(firstHit([x+24.3,y,117.35],[0,0,-1])-1)<0.025,'front pocket side wall');
+ assert.ok(Math.abs(firstHit([x+24.3,y,37.35],[0,0,-1])-1)<0.025,'front pocket side wall');
 }
 // A pen can leave the lowest row along its axis without hitting the front bins.
 for(let col=0;col<4;col++) {
  const u=16.175+25.4*col,v=12.7;
  assert.equal(firstHit([u,y0+v*c-c,z0+v*c+c],[0,-c,c]),Infinity,'pen access blocked');
 }
-console.log(JSON.stringify({pass:true,triangles:n,components:1,watertight:true,bounds:[lo,hi],penHoles:20,squarePockets:6,frontPockets:5,frontPocketDepth:100,pocketDepth:101.6,measurementRays:rays,railGap:16},null,2));
+console.log(JSON.stringify({pass:true,triangles:n,components:1,watertight:true,bounds:[lo,hi],penHoles:20,squarePockets:6,frontPockets:5,frontPocketDepth:20,pocketDepth:101.6,measurementRays:rays,railGap:16},null,2));

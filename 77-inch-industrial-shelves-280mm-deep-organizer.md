@@ -11,8 +11,8 @@ Integral organizer on the existing industrial rail shelf. All openings face forw
 - All pockets: 101.6 mm deep along the 45-degree axis, with 6.35 mm minimum end material.
 - The clarification "yes" was interpreted as 4 across x 5 high, not a 5-inch overall vertical height.
 
-- Front row: five 48.38 x 48.38 mm square openings, 100 mm vertically from floor to opening; 6.35 mm walls and floors.
-- Front rim at Z 116.35 mm. Angled organizer raised 31.75 mm so its lowest openings remain accessible.
+- Front row: five 48.38 x 48.38 mm square openings, 20 mm vertically from floor to opening; 6.35 mm walls and floors.
+- Front rim at Z 36.35 mm. Angled organizer raised 31.75 mm so its lowest openings remain accessible.
 
 ## Views
 Front (face-local view):
@@ -23,6 +23,7 @@ Front (face-local view):
  o o o o    +-----+ +-----+ +-----+
  o o o o    |     | |     | |     |
             +-----+ +-----+ +-----+
+ [__] [__] [__] [__] [__]  front bins open upward
 ```
 Side (front at left):
 ```
@@ -42,7 +43,8 @@ Top: 280 x 230 mm shelf; organizer spans full width and Y 63.8653..230 mm. The o
 - pen_voids: twenty cylindrical blind cutters.
 - bin_voids: six square blind cutters.
 - organizer_block: outer body minus pocket cutters.
-- organizer_assembly: union of original shelf assembly and organizer.
+- front_bins: five square top-opening pockets, 20 mm usable vertical depth, across the full front width.
+- organizer_assembly: union of shelf, raised angled organizer and front bins.
 - debug_axes, assembly_colored and organizer_assembly_colored: inspection helpers.
 
 ## Assembly and printing
@@ -92,7 +94,7 @@ The mesh check tests manifold edges, consistent face winding, one connected comp
 | pocket_depth_mm | 101.6 |
 | organizer_wall_mm | 6.35 |
 | organizer_lift_mm | 31.75 |
-| front_bin_depth_mm | 100 |
+| front_bin_depth_mm | 20 |
 | front_bin_wall_mm | 6.35 |
 | front_bin_floor_mm | 6.35 |
 | front_bin_size_mm | (shelf_width_mm - (front_bin_count+1)*front_bin_wall_mm)/front_bin_count |
@@ -124,4 +126,7 @@ Internal build helper: `python build-organizer-projects.py H2D H3C`. It resolves
 
 Command-line reference: https://github.com/bambulab/BambuStudio/wiki/Command-Line-Usage
 
-2026-11-23: Added five 100 mm deep top-opening square front bins. Extended shelf depth to 230 mm, moved organizer flush to the rear and raised it 31.75 mm to retain access. Uses normal automatic supports for the broad flat underside.
+2026-11-23: Added five 20 mm deep top-opening square front bins. Extended shelf depth to 230 mm, moved organizer flush to the rear and raised it 31.75 mm to retain access. Uses normal automatic supports for the broad flat underside.
+
+
+2026-11-23: Front compartments reduced to 20 mm usable vertical depth at the user’s request. Remaining geometry unchanged.

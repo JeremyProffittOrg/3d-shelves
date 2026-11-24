@@ -1,7 +1,7 @@
 # Angled shelf organizer
 
 ## Outcome
-Create a 280 x 230 mm industrial rail shelf with 20 pen bores (4 across x 5 high), six square pockets (3 across x 2 high) opening upward/frontward at 45 degrees, plus five square front pockets with top openings and 100 mm vertical depth. Build H2D and H3C projects with the installed 0.4 mm profiles, validate slicing and fit, and open the corrected project through the Bambu Studio command line.
+Create a 280 x 230 mm industrial rail shelf with 20 pen bores (4 across x 5 high), six square pockets (3 across x 2 high) opening upward/frontward at 45 degrees, plus five square front pockets with top openings and 20 mm vertical depth. Build H2D and H3C projects with the installed 0.4 mm profiles, validate slicing and fit, and open the corrected project through the Bambu Studio command line.
 
 ## Non-goals
 No physical printing, printer communication, firmware changes, or changes to other shelf designs. Only organizer width and its project setup change.
@@ -65,9 +65,9 @@ Run commands through Node child_process with windowsHide:true, no shell. Record 
 2026-11-23 user request: "okay, but it won't fit and print on my bambulabs h2d or h3c, so resize it so it does".
 Outcome: a project within the installed H2D and H3C printable volumes. No printing or printer connection. The original 300 x 200 x 226.134736 mm mesh fits; the prior project used a blank printer model with 200 x 200 x 100 mm limits and off-plate placement. Preserve the original functional rail and pocket dimensions.
 Files: build-organizer-projects.py; verify-organizer.mjs; organizer design Markdown; plan.md.
-- [~] printer-project-build — Build with resolved installed H2D/H3C 0.4 mm machine, 0.20 mm process and Generic PLA presets, arrange within printable area.
-- [ ] printer-project-check — node verify-organizer.mjs <project.3mf> passes transformed build-volume, bed contact, machine name and individual-nozzle reach checks for both models. Bambu CLI slicing must succeed before claiming slice validation.
-- [ ] printer-project-open — Open corrected H2D project via CLI and retain H3C project for selection.
+- [x] printer-project-build — Build with resolved installed H2D/H3C 0.4 mm machine, 0.20 mm process and Generic PLA presets, arrange within printable area.
+- [x] printer-project-check — node verify-organizer.mjs <project.3mf> passes transformed build-volume, bed contact, machine name and individual-nozzle reach checks for both models. Bambu CLI slicing must succeed before claiming slice validation.
+- [x] printer-project-open — Open corrected H2D project via CLI and retain H3C project for selection.
 - [ ] printer-project-save — Commit only task changes and push. No SCAD change is necessary.
 Job policy: each Bambu export/slice has a 10-minute timeout, logs and PID. Maximum two corrected retries per failure class. No print transmission.
 Execution: initial 3MF verification failed on out-of-volume placement; installed profiles show H2D nozzle reach 325 x 320 x 325 mm and H3C area 330 x 320 x 325 mm. Local profile facts, not a guessed printer specification.
@@ -89,3 +89,15 @@ Proof: existing mesh check extended for five square openings, their floors/walls
 - Front-bin mesh check passed: 6,624 triangles, one watertight connected component, 207 pocket probes, five front pockets at 100 mm vertical depth, unchanged 16 mm rail gap, and clear lowest-row pen exit rays.
 - Front and rear previews generated successfully and inspected. H2D editable project passed transformed placement and rigid-transform checks; opened via CLI, PID 42632.
 - Automatic support type changed from tree to normal for this broad flat underside, avoiding expensive tree branching. Both latest model slicing jobs tracked under build/organizer/{h2d,h3c}/job.json with 600-second ceilings.
+
+- Latest build-organizer-projects.py H2D and H3C both exited 0; result.json return_code 0, warning_message empty. Normal automatic supports reduced support generation to about two seconds per printer.
+- node verify-organizer.mjs build/organizer/h2d/77-inch-industrial-shelves-280mm-deep-organizer-h2d.3mf and equivalent h3c command both PASS. Receipts: build/organizer/{h2d,h3c}/fit-check.json.
+- Slicer estimates: H2D 56.26 hours, H3C 51.89 hours; approximately 2.403 kg PLA including supports. No physical printing or hardware connection.
+- Source commit db53a524feec22477ffa63b1ad3d1e21731aded9 pushed successfully; workflow 45301866176 is monitored to terminal result.
+
+## shallow-front-bins — Reduce only the five front compartment depths
+2026-11-23 locked correction (verbatim): "nope, make them 20mm tall instead fo 100". Interpret consistently as usable inside floor-to-opening depth: 20 mm. Preserve square widths, layout, angled organizer height, rail fit and shelf footprint.
+Files: organizer SCAD, corresponding Markdown, README design section, verify-organizer.mjs, plan.md. Proof: mesh probe must read 20 mm usable front-pocket depth; both printer projects must slice and pass fit checks.
+- [~] shallow-bin-geometry — Regenerate STL and previews; node verify-organizer.mjs passes.
+- [ ] shallow-bin-projects — Regenerate H2D/H3C 3MFs; slice return code 0 and fit check pass.
+- [ ] shallow-bin-delivery — Open revised model and push focused commit; release workflow success.

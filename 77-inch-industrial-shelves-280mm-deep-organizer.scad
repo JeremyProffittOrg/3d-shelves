@@ -301,7 +301,7 @@ pocket_depth_mm = 101.6;
 organizer_wall_mm = 6.35;
 organizer_lift_mm = 31.75;
 front_bin_count = 5;
-front_bin_depth_mm = 100;
+front_bin_depth_mm = 20;
 front_bin_wall_mm = 6.35;
 front_bin_floor_mm = 6.35;
 front_bin_size_mm = (shelf_width_mm - (front_bin_count+1)*front_bin_wall_mm)/front_bin_count;
@@ -341,7 +341,7 @@ assert(bin_start_v_mm >= organizer_wall_mm);
 
 // COMPONENT INDEX (in addition to the unchanged shelf components above):
 // organizer_outer: [0,63.8653,9.5] to [280,230,207.8847]; joins shelf and absorbs back wall.
-// front_bins: five 48.38 mm square openings, 100 mm vertical depth; top Z=116.35.
+// front_bins: five 48.38 mm square openings, 20 mm vertical depth; top Z=36.35.
 // pen_voids: 20 diameter-12.7 blind bores; 101.6 axial depth; v=12.7..114.3.
 // bin_voids: 6 square-50.8 blind pockets; 101.6 axial depth; 6.35 clear gaps.
 // organizer_block: outer less voids, closed ends and solid support to shelf.
@@ -401,7 +401,7 @@ module organizer_block() {
 }
 
 // Front row joins the full shelf width to the angled organizer with no rear gap.
-// Bound [0,0,9.5]..[280,64.3653,116.35]. Five blind square cutters open upward.
+// Bound [0,0,9.5]..[280,64.3653,36.35]. Five blind square cutters open upward.
 module front_bins() {
     difference() {
         translate([0,0,shelf_thickness_mm-organizer_join_mm])

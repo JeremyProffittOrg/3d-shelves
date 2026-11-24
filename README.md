@@ -231,7 +231,7 @@ See [CLAUDE.md](CLAUDE.md) for project conventions (coordinate system, naming, m
 
 ## Angled pen and square-pocket organizer
 
-280 x 230 mm industrial rail shelf with 20 pen holes (4 across x 5 high), six angled 2-inch square pockets, and five square top-opening front bins (100 mm deep). Openings face upward at 45 degrees; the angled pockets are 4 inches deep with closed ends. The organizer is flush with the rear edge.
+280 x 230 mm industrial rail shelf with 20 pen holes (4 across x 5 high), six angled 2-inch square pockets, and five square top-opening front bins (20 mm deep). Openings face upward at 45 degrees; the angled pockets are 4 inches deep with closed ends. The organizer is flush with the rear edge.
 
 | Front view | Rear view |
 |---|---|
